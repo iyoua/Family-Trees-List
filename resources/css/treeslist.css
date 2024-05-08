@@ -1,1 +1,44 @@
+        /* 父容器样式 */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 5px; /* 设置内部填充来创建边距 */
+            border: 0px solid black;
+            width: 100%;
+        }
+
+        /* 子容器样式 */
+        .child {
+            flex: 2; /* 设置子容器的弹性比例为1 */
+            min-width: 300px; /* 设置子容器的最小宽度 */
+            max-width: 380px; /* 设置子容器的最大宽度 */
+            height: 70px;
+            padding: 5px;
+            border: 1px solid;
+            margin-bottom: 10px; /* 设置垂直外边距 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+            transition: transform 0.3s ease; /* 添加过渡效果 */
+            border-radius: 5px; /* 设置圆角 */
+        }
+
+
+        /* 鼠标经过子容器时的样式 */
+        .child:hover {
+             transform: translateY(-3px); /* 向上移动子容器 */
+             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* 增加阴影效果 */}
+        
+         hr.custom-height {
+            height: 1px; /* 设置线条高度 */
+            border: none; /* 移除默认边框 */
+            background-color: black; /* 设置线条颜色 */
+            margin: 3px 0; /* 设置线条上下外边距 */
+        }
+.zoom {
+    transition: transform 0.3s; /* 设置过渡效果 */
+}
+
+.zoom:hover {
+    transform: scale(1.2); /* 鼠标经过时放大1.2倍 */
+}
 
