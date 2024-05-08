@@ -1,0 +1,45 @@
+<?php
+
+declare(strict_types=1);
+namespace TreesListModule;
+
+use Fisharebest\Webtrees\Auth;
+use Fisharebest\Webtrees\I18N;
+use Fisharebest\Webtrees\Tree;
+use Illuminate\Support\Collection;
+use Fisharebest\Webtrees\View;
+
+
+
+/**
+ * @var bool                      $families
+ * @var IndividualListModule|null $module
+ * @var array<array<int,string>>  $order
+ * @var array<string,string>      $params
+ * @var array<array<int>>         $surnames
+ * @var Tree                      $tree
+ */
+
+?>
+
+    <div class="container">
+        <?php foreach ($gedcoms as $gedcom ) : ?>
+            <div class="child">
+                <a href="<?php echo $gedcom->gedcom_name; ?>">
+                    <b><?= $gedcom->Title ?></b></a>
+                <hr  class="custom-height">
+                <img src="<?=e($familyicon)?>" title="<?php echo I18N::translate("Number of Families"); ?>" class="zoom">
+                    <?= $gedcom->Families ?>，
+                <img src="<?=e($individualicon)?>" title="<?php echo I18N::translate("Number of Individuals"); ?>" class="zoom">
+                    <?= $gedcom->Individuals ?>，
+                
+				<img src="<?=e($eventicon)?>" title="<?php echo I18N::translate("Number of Events"); ?>" class="zoom">
+                    <?= $gedcom->Events ?>，
+                <img src="<?=e($surnameicon)?>" title="<?php echo I18N::translate("Number of Surnames"); ?>" class="zoom">
+				    <?= $gedcom->Surnames ?>
+                
+				
+            </div>
+        <?php endforeach ?>
+    </div>
+
