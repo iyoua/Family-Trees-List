@@ -265,12 +265,12 @@ $gedcoms = DB::table('gedcom')
     {
         // Note the special characters used in plural and context-sensitive translations.
         return [
-            'List of FamilyTree on Website' => '网站上的家谱列表',
-            'Number of Families' => '家庭总数',
-            'Number of Individuals' => '家族成员总数',
-            'Number of Events' => '事件总数',
-            'Number of Surnames' => '姓氏总数',
-            'FamilyTree List' => '家谱列表',
+            'List of FamilyTree on Website' => '本網站已收錄家譜',
+            'Total number of households' => '家庭總數',
+            'Total number of Individuals' => '家族成員總數',
+            'Total number of Events' => '事件總數',
+            'Total number of Surnames' => '姓氏總數',
+            'FamilyTree List' => '家譜列表',
         ];
     }
 
