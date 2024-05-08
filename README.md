@@ -1,4 +1,4 @@
-# Family-Trees-List modules
+# Family-Trees-List module for WebTrees
 ***
 *Family-tree-list* is a module for displaying multiple genealogical lists in webtrees.
 
