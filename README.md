@@ -4,7 +4,11 @@
 
 ![效果图](/20240508205647.jpg)
 
-In the section of the website homepage, display a list of genealogies on the website, including statistical data for each genealogy, such as total number of families, total number of individuals, total number of surnames, and total number of events.
+In the section of the website homepage, display a list of genealogies on the website, including statistical data for each genealogy, such as 
+1. total number of families,
+2. total number of individuals,
+3. total number of surnames,
+4. total number of events.
 
 ## Install
 
