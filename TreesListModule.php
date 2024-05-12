@@ -159,7 +159,6 @@ $gedcoms = DB::table('gedcom')
     ->orderBy('Individuals','desc')  
     ->get();
 
-
         // Find a module providing individual lists.
         $module = 'Trees';
         $content = view('trees-table', [
