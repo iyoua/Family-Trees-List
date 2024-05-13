@@ -13,3 +13,7 @@ In the section of the website homepage, display a list of genealogies on the web
 Install
 ----------
 After downloading and decompressing, simply upload it to the modules_v4 folder of WEBTREES.
+
+Version update
+---------------
+Under the guidance of Greg, the problem of routing family tree links has been resolved. We would like to express our gratitude!
