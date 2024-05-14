@@ -8,24 +8,23 @@ use Fisharebest\Webtrees\I18N;
 ?>
 
     <div class="container">
-        <?php foreach ($gedcoms as $gedcom ) : ?>
+        <?php foreach ($all_trees as $tree ) : ?>
             <div class="child">
-                <a href="<? echo e(route(TreePage::class,['tree'=>$gedcom->gedcom_name])); ?>">
-                    <b><?= $gedcom->Title ?></b></a>
+                <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+                    <b><?= e($tree->title()) ?></b></a>
                 <hr  class="custom-height">
                 <img src="<?=e($familyicon)?>" title="<?php echo I18N::translate("Total number of households"); ?>" class="zoom">
-                    <?= $gedcom->Families ?>，
+                    <?= I18N::number(intval($families[$tree->id()])) ?>，
                 <img src="<?=e($individualicon)?>" title="<?php echo I18N::translate("Total number of Individuals"); ?>" class="zoom">
-                    <?= $gedcom->Individuals ?>，
+                    <?=  I18N::number(intval($individuals[$tree->id()])) ?>，
                 
 				<img src="<?=e($eventicon)?>" title="<?php echo I18N::translate("Total number of Events"); ?>" class="zoom">
-                    <?= $gedcom->Events ?>，
+                    <?=  I18N::number(intval($events[$tree->id()])) ?>，
                 <img src="<?=e($surnameicon)?>" title="<?php echo I18N::translate("Total number of Surnames"); ?>" class="zoom">
-				    <?= $gedcom->Surnames ?>
+				    <?=  I18N::number(intval($surnames[$tree->id()])) ?>
                 
 				
             </div>
         <?php endforeach ?>
         
     </div>
-
