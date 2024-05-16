@@ -11,9 +11,9 @@
         /* 子容器样式 */
         .child {
             flex: 2; /* 设置子容器的弹性比例为1 */
-            min-width: 300px; /* 设置子容器的最小宽度 */
-            max-width: 380px; /* 设置子容器的最大宽度 */
-            height: 70px;
+            min-width: 320px; /* min-width: 300px;设置子容器的最小宽度 */
+            /* max-width: 380px; 设置子容器的最大宽度 */
+            /*height: 70px;*/
             padding: 5px;
             border: 1px solid;
             margin-bottom: 10px; /* 设置垂直外边距 */
@@ -41,4 +41,3 @@
 .zoom:hover {
     transform: scale(1.2); /* 鼠标经过时放大1.2倍 */
 }
-
