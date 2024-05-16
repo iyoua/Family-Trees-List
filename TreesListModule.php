@@ -136,7 +136,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         return DB::table('gedcom')
             ->leftJoin('dates', 'd_file', '=', 'gedcom_id')
             ->groupBy(['gedcom_id'])
-            ->pluck(new Expression('COUNT(d_file) AS aggregate'), 'gedcom_id')
+            ->pluck(new Expression('COUNT(d_fact) AS aggregate'), 'gedcom_id')
             ->map(static fn (string $count): int => (int) $count);
     }
 
@@ -171,8 +171,13 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
                 ]);
 
         if ($context !== self::CONTEXT_EMBED) {
-
-			$title = I18N::translate('List of FamilyTree on Website');
+            $totaltrees=$this->tree_service->all()->count();
+            if($totaltrees===1){
+                $title = I18N::translate('There is one tree on this website');
+            }else {
+                $title = I18N::translate('This website has %s trees',$totaltrees); 
+            }
+			
             return view('modules/block-template', [
                 'block'      => Str::kebab($this->name()),
                 'id'         => $block_id,
@@ -199,7 +204,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
      */
     public function isUserBlock(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -214,7 +219,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     
     public function customModuleVersion(): string
     {
-        return '1.2.0';
+        return '1.2.1';
     }
     
         public function customTranslations(string $language): array
@@ -240,12 +245,13 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         // Note the special characters used in plural and context-sensitive translations.
         return [
-            'List of FamilyTree on Website' => 'Diese Website enthält einen Stammbaum',
-            'Total number of households' => 'Gesamtzahl der Haushalte',
-            'Total number of Individuals' => 'Gesamtzahl der Familienangehörigen',
-            'Total number of Events' => 'Gesamtzahl der Veranstaltungen',
-            'Total number of Surnames' => 'Nachnamen insgesamt',
-            'FamilyTree List' => 'Genealogische Liste',
+            'This website has %s trees' => 'Diese Website hat %s Stammbäume',
+            'There is one tree on this website'=>'Es gibt einen Baum auf dieser Website',
+            'Total number of households' => 'Gesamtzahl der Familien',
+            'Total number of Individuals' => 'Gesamtzahl der Personen',
+            'Total number of Events' => 'Gesamtzahl der Ereignisse',
+            'Total number of Surnames' => 'Gesamtzahl der Nachnamen',
+            'FamilyTree List' => 'Stammbaum-Liste',
         ];
     }
 
@@ -253,7 +259,8 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         // 
         return [
-            'List of FamilyTree on Website' => '本网站已收录家谱',
+            'This website has %s trees' => '本网站已收录%s个家谱',
+            'There is one tree on this website'=>'本网站收录了1个家谱',
             'Total number of households' => '家庭总数',
             'Total number of Individuals' => '家族成员总数',
             'Total number of Events' => '事件总数',
@@ -266,7 +273,8 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         
         return [
-            'List of FamilyTree on Website' => '本網站已收錄家譜',
+            'This website has %s trees' => '本網站已收錄%s個家譜',
+            'There is one tree on this website'=>'本網站收錄了1個家譜',
             'Total number of households' => '家庭總數',
             'Total number of Individuals' => '家族成員總數',
             'Total number of Events' => '事件總數',
