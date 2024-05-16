@@ -17,3 +17,9 @@ After downloading and decompressing, simply upload it to the modules_v4 folder o
 Version update
 ---------------
 Under the guidance of Greg, the problem of routing family tree links has been resolved. We would like to express our gratitude!
+
+1.2.1 Version Upgrade
+---------------------
+1. Added statistics on the total number of genealogies;
+2. Revised the list layout to accommodate longer family tree names;
+3. Modified the settings of user page blocks.
