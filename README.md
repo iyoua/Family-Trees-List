@@ -2,7 +2,7 @@ Family-Trees-List module for WebTrees
 =====================================
 *Family-tree-list* is a module for displaying multiple genealogical lists in webtrees.
 
-[![效果图(https://www.baidu.com/img/flexible/logo/pc/result.png)]
+[!效果图(https://www.baidu.com/img/flexible/logo/pc/result.png)]
 
 In the section of the website homepage, display a list of genealogies on the website, including statistical data for each genealogy, such as 
 1. total number of families,
