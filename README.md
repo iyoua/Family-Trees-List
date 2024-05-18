@@ -21,3 +21,10 @@ Under the guidance of Greg, the problem of routing family tree links has been re
 1. Added statistics on the total number of genealogies;
 2. Revised the list layout to accommodate longer family tree names;
 3. Modified the settings of user page blocks.
+
+
+1.3.0 Version Update
+---------------------
+Added block setting function,
+Three display styles have been added,
+Simplified prompt information and removed too many translation entries.
