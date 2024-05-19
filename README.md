@@ -30,7 +30,7 @@ Three display styles have been added,
 Simplified prompt information and removed too many translation entries.
 
 
-1.3.0 Version Update
+1.3.2 Version Update
 ---------------------
 Fixed statistical errors in the number of events.
 Revised some translation entries.
