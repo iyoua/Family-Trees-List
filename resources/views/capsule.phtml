@@ -1,0 +1,105 @@
+<?php
+
+declare(strict_types=1);
+namespace TreesListModule;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
+use Fisharebest\Webtrees\I18N;
+
+?>
+<style>
+.capsule-row {  
+    display: flex;  
+    justify-content: flex-start;  
+    align-items: center;  
+    /* 假设我们要设定行的总宽度 */  
+    width: 100%; /* 或者特定的px值 */  
+    max-width: 800px; /* 示例宽度 */  
+    padding: 10px;  
+    box-sizing: border-box;  
+}  
+  
+.capsule {  
+    margin-right: 10px; /* 胶囊之间的间距 */  
+    padding: 10px;  
+    border-radius: 10px; /* 胶囊圆角 */  
+    transition: background-color 0.3s ease; /* 过渡效果 */  
+    cursor: pointer; /* 鼠标悬停时显示小手图标 */  
+}  
+  
+.capsule-auto {  
+    flex-grow: 1; /* 第一段长度自适应 */  
+    background-color: #f0f0f0; /* 浅色背景 */  
+}  
+  
+.capsule-content {  
+    background-color: #f8f8f8; /* 浅色背景 */  
+    white-space: nowrap; /* 防止内容换行 */  
+    overflow: hidden; /* 隐藏溢出的内容 */  
+    text-overflow: ellipsis; /* 文本溢出时显示省略号 */  
+}  
+  
+/* 鼠标经过时背景色加深 */  
+.capsule:hover {  
+    background-color: #e0e0e0; /* 深色背景 */  
+}  
+  
+/* 单独设置每个内容胶囊的颜色（可选） */  
+.capsule-content:nth-child(2) {  
+    background-color: #f4f4f4;  
+}  
+.capsule-content:nth-child(3) {  
+    background-color: #f6f6f6;  
+}  
+.capsule-content:nth-child(4) {  
+    background-color: #f2f2f2;  
+}  
+.capsule-content:nth-child(5) {  
+    background-color: #f5f5f5;  
+}  
+  
+/* 鼠标经过时单独设置每个内容胶囊的颜色（可选） */  
+.capsule-content:nth-child(2):hover {  
+    background-color: #e4e4e4;  
+}  
+.capsule-content:nth-child(3):hover {  
+    background-color: #e6e6e6;  
+}  
+.capsule-content:nth-child(4):hover {  
+    background-color: #e2e2e2;  
+}  
+.capsule-content:nth-child(5):hover {  
+    background-color: #e5e5e5;  
+}  
+  
+/* 移除最后一个胶囊的右边距 */  
+.capsule-row .capsule:last-child {  
+    margin-right: 0;  
+}
+</style>
+    <div>
+        <?php foreach ($all_trees as $tree ) : ?>
+            <div class="capsule-row" id="tcard<? echo $tree->name(); ?>">
+                <div class="capsule capsule-auto">
+                <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+                    <img src="<? echo e($treeicon) ?>" class="zoom">
+                    <b><? echo e($tree->title()) ?></b>
+                </a>
+                </div>
+                <div class="capsule capsule-content">
+                    <img src="<?=e($familyicon)?>" title="<?php echo I18N::translate("Families"); ?>" class="zoom">
+                    <?= I18N::number(intval($families[$tree->id()])) ?></div>
+                <div class="capsule capsule-content">
+                    <img src="<?=e($individualicon)?>" title="<?php echo I18N::translate("Individuals"); ?>" class="zoom">
+                    <?= I18N::number(intval($individuals[$tree->id()])) ?></div>
+                <div class="capsule capsule-content">
+                    <img src="<?=e($surnameicon)?>" title="<?php echo I18N::translate("Surnames"); ?>" class="zoom">
+                    <?= I18N::number(intval($surnames[$tree->id()])) ?></div>
+                <div class="capsule capsule-content">
+                    <img src="<?=e($eventicon)?>" title="<?php echo I18N::translate("Events"); ?>" class="zoom">
+                    <?= I18N::number(intval($events[$tree->id()])) ?></div>
+                
+            </div>
+        <?php endforeach ?>
+        
+    </div>
+

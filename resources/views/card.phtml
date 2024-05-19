@@ -1,0 +1,93 @@
+<?php
+
+declare(strict_types=1);
+namespace TreesListModule;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
+use Fisharebest\Webtrees\I18N;
+
+?>
+<style>
+            /* 父容器样式 */
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding: 0px; /* 设置内部填充来创建边距 */
+            border: 0px solid black;
+            width: 100%;
+        }
+
+         .hr.custom-height {
+            height: 1; /* 设置线条高度 */
+            border: none; /* 移除默认边框 */
+             /* background-color: black;设置线条颜色 */
+            border-top: 1px dashed #000; /* 虚线样式<br>颜色为黑色 */
+            margin: 3px 0; /* 设置线条上下外边距 */
+        }
+.zoom {
+    transition: transform 0.3s; /* 设置过渡效果 */
+       filter: none; 
+}
+
+.zoom:hover {
+    transform: scale(1.2); /* 鼠标经过时放大1.2倍 */
+       filter: none; 
+}
+  .card1 {  
+    width: 160px; /* min-width: 300px;设置子容器的最小宽度 */
+    border: 1px solid #ccc;  
+    border-radius: 5px;  
+    margin-bottom: 10px;  
+                margin-bottom: 10px; /* 设置垂直外边距 */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
+            transition: transform 0.3s ease; /* 添加过渡效果 */
+    /*overflow: hidden;  */
+  }  
+          /* 鼠标经过子容器时的样式 */
+        .card1:hover {
+             transform: translateY(-3px); /* 向上移动子容器 */
+             box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2); /* 增加阴影效果 */}
+    
+  .card1-header {  
+    background-color: #f2f2f2;  
+    padding: 10px;  
+  }  
+    
+
+  .card1-body {  
+    padding: 10px;  
+    height: auto;  
+    overflow: hidden;
+    transition: height 0.3s ease-out;  
+  }  
+    
+
+</style>
+    <div class="container">
+        <?php foreach ($all_trees as $tree ) : ?>
+            <div class="card1" id="tcard<? echo $tree->name(); ?>">
+                <div class='card1-header' onclick="toggleCard(event, 'tcard<? echo $tree->name(); ?>')">
+                <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+                    <img src="<? echo e($treeicon) ?>" class="zoom">
+                    <b><? echo e($tree->title()) ?></b>
+                </a>
+                </div>
+                <div class="card1-body">
+
+                      <?php echo I18N::translate("Families"); ?>:
+                         <?= I18N::number(intval($families[$tree->id()])) ?><br>
+
+                      <?php echo I18N::translate("Individuals"); ?>:
+                        <?=  I18N::number(intval($individuals[$tree->id()])) ?><br>
+
+                      <?php echo I18N::translate("Surnames"); ?>:
+				        <?=  I18N::number(intval($surnames[$tree->id()])) ?><br>
+
+				      <?php echo I18N::translate("Events"); ?>:
+                        <?=  I18N::number(intval($events[$tree->id()])) ?>
+                </div>
+            </div>
+        <?php endforeach ?>
+        
+    </div>
+

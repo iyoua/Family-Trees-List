@@ -1,0 +1,37 @@
+<?php
+
+declare(strict_types=1);
+namespace TreesListModule;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
+use Fisharebest\Webtrees\I18N;
+
+?>
+
+    <div class="container mt-3">
+        <?php foreach ($all_trees as $tree ) : ?>
+            <div class="d-flex mb-3  border rounded">
+                <div class="p-2 bg-light flex-grow-1 ">
+                    <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+                    <b><?= e($tree->title()) ?></b></a>
+                </div>
+                <div  class="p-2 text-dark" title="<?php echo I18N::translate("Families"); ?>">
+                    
+                    <?= I18N::number(intval($families[$tree->id()])) ?>
+                </div>
+                <div class="p-2 bg-light" title="<?php echo I18N::translate("Individuals"); ?>">
+                    
+                    <?=  I18N::number(intval($individuals[$tree->id()])) ?>
+                </div>
+				<div class="p-2 text-dark" title="<?php echo I18N::translate("Surnames"); ?>">
+				    
+                    <?=  I18N::number(intval($surnames[$tree->id()])) ?>
+                </div>
+                <div class="p-2 bg-light " title="<?php echo I18N::translate("Events"); ?>">
+                    
+				    <?=  I18N::number(intval($events[$tree->id()])) ?>
+                </div>
+				
+            </div>
+        <?php endforeach ?>
+
+    </div>

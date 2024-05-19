@@ -1,0 +1,61 @@
+<?php
+
+declare(strict_types=1);
+namespace TreesListModule;
+use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
+use Fisharebest\Webtrees\I18N;
+
+
+?>
+<style>  
+  table td, table th {  
+    text-align: center;  
+  }  
+</style> 
+
+<table class="table table-sm">
+
+    <thead>
+        <tr>
+            <th style="text-align: center;" width="40%"  >
+                <img src="<? echo e($treeicon) ?>">&nbsp;&nbsp;<?= I18N::translate('Family tree') ?>
+            </th>
+            <th style="text-align: center;" width="15%" >
+				<img src="<?=e($familyicon)?>"><?= I18N::translate('Families') ?>
+            </th>
+			<th style="text-align: center;" width="15%" >
+				<img src="<?=e($individualicon)?>"><?= I18N::translate('Individuals') ?>
+            </th>
+			<th style="text-align: center;" width="15%" >
+				<img src="<?=e($surnameicon)?>"><?= I18N::translate('Surnames') ?>
+            </th>
+			<th style="text-align: center;" width="15%" >
+				<img src="<?=e($eventicon)?>"><?= I18N::translate('Events') ?>
+            </th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <?php foreach ($all_trees as $tree ) : ?>
+            <tr>
+                <td style="text-align: left;">
+                    <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+                    <b><?= e($tree->title()) ?></b></a>
+                </td>
+                <td >
+                     <?= I18N::number(intval($families[$tree->id()])) ?>
+                </td>
+                <td >
+                     <?=  I18N::number(intval($individuals[$tree->id()])) ?>
+                </td>
+				<td >
+                    <?=  I18N::number(intval($surnames[$tree->id()])) ?>
+                </td>
+				<td >
+                    <?=  I18N::number(intval($events[$tree->id()])) ?>
+                </td>
+				
+            </tr>
+        <?php endforeach ?>
+    </tbody>
+</table>
