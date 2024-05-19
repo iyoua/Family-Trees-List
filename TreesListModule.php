@@ -42,8 +42,12 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     public const CUSTOM_MODULE         = 'Family-Trees-List';
     public const CUSTOM_GITHUB_USER = 'iyoua';
     public const CUSTOM_WEBSITE          = 'https://github.com/' . self::CUSTOM_GITHUB_USER . '/' . self::CUSTOM_MODULE . '/';
+    public function customModuleLatestVersionUrl(): string { return 'https://github.com/iyoua/Family-Trees-List/blob/main/version.txt'; }
+        // Default values for new blocks.
+    private const DEFAULT_SORT = 'id_desc'; //默认排序方式：id
+    private const DEFAULT_STYLE = 'list';   //默认布局：列表
        
-    
+
     private TreeService $tree_service;
     public function __construct(TreeService $tree_service)
     {
@@ -60,7 +64,12 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     public function boot(): void
     {
         View::registerNamespace($this->name(), $this->resourcesFolder() . 'views/');
-        View::registerCustomView('::trees-table', $this->name() . '::trees-table');
+        View::registerCustomView('::list', $this->name() . '::list');
+        View::registerCustomView('::card', $this->name() . '::card');
+        View::registerCustomView('::table', $this->name() . '::table');
+        View::registerCustomView('::config', $this->name() . '::config');
+        View::registerCustomView('::capsule', $this->name() . '::capsule');
+        View::registerCustomView('::navbar', $this->name() . '::navbar');
     }
         
     
@@ -131,14 +140,15 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
      *
      * @return Collection<int,int>
      */
-    private function totalEvents(): Collection
+    private function totalEvents(): array
     {
-        return DB::table('gedcom')
-            ->leftJoin('dates', 'd_file', '=', 'gedcom_id')
-            ->groupBy(['gedcom_id'])
-            ->pluck(new Expression('COUNT(d_fact) AS aggregate'), 'gedcom_id')
-            ->map(static fn (string $count): int => (int) $count);
-    }
+    return DB::table('dates')  
+        ->select('d_file', DB::raw('COUNT(*) as count'))  
+        ->whereNotIn('d_fact', ['HAED', 'CHAN']) // 排除HAED和CHAN  
+        ->groupBy('d_file')  
+        ->pluck('count', 'd_file') // 假设d_file就是gedcom_id  
+        ->all();  
+}
 
     /**
      * Count the number of suenames in each tree.
@@ -156,32 +166,38 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
 
     public function getBlock(Tree $tree, int $block_id, string $context, array $config = []): string
     {
-    
-        $content = view('trees-table', [
+        $infoStyle = $this->getBlockSetting($block_id, 'infoStyle', self::DEFAULT_STYLE);
+        $sortStyle = $this->getBlockSetting($block_id, 'sortStyle', self::DEFAULT_SORT);
+        $treesCollection = $this->tree_service->all(); // 假设返回的是一个Collection  
+        $sortStyle = 'id_desc';
+        if ($sortStyle === 'id_desc') {  
+            $sortedTrees = $treesCollection->sortByDesc('tree_id')->all();  
+        } else {  
+           $sortedTrees = $treesCollection->sortBy('tree_id')->all();  
+        } 
+                $content = view($infoStyle, [
                     'block_id' =>$block_id,
-                    'all_trees'  => $this->tree_service->all(),
+                    'all_trees'  => $sortedTrees,
                     'individuals'=> $this->totalIndividuals(),
                     'families'   => $this->totalFamilies(),
                     'events'    => $this->totalEvents(),
                     'surnames'  => $this->totalSurnames(),
+                    'treeicon' => $this->assetUrl('images/tree.png'),
                     'familyicon' => $this->assetUrl('images/families.png'),
-			    	'individualicon' => $this->assetUrl('images/person1.png'),
+			    	'individualicon' => $this->assetUrl('images/person2.png'),
 			    	'eventicon' => $this->assetUrl('images/event.png'),
-			    	'surnameicon' => $this->assetUrl('images/surn.png'),
+			    	'surnameicon' => $this->assetUrl('images/sur.png'),
+			    	'context' => $context,
                 ]);
 
         if ($context !== self::CONTEXT_EMBED) {
             $totaltrees=$this->tree_service->all()->count();
-            if($totaltrees===1){
-                $title = I18N::translate('There is one tree on this website');
-            }else {
-                $title = I18N::translate('This website has %s trees',$totaltrees); 
-            }
-			
+
+			$title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
             return view('modules/block-template', [
                 'block'      => Str::kebab($this->name()),
                 'id'         => $block_id,
-				'config_url' => '',
+				'config_url' => $this->configUrl($tree, $context, $block_id),
                 'title'      => $title,
                 'content'    => $content,
             ]);
@@ -219,9 +235,67 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     
     public function customModuleVersion(): string
     {
-        return '1.2.1';
+        return '1.3.2';
     }
-    
+
+
+    /**
+     * Update the configuration for a block.
+     *
+     * @param ServerRequestInterface $request
+     * @param int                    $block_id
+     *
+     * @return void
+     */
+    public function saveBlockConfiguration(ServerRequestInterface $request, int $block_id): void
+    {
+        $info_style = Validator::parsedBody($request)->string('infoStyle');   // 显示风格
+        $sort_style = Validator::parsedBody($request)->string('sortStyle');   // 排序，gedcom_id
+
+
+        $this->setBlockSetting($block_id, 'infoStyle', $info_style);
+        $this->setBlockSetting($block_id, 'sortStyle', $sort_style);
+    }
+
+    /**
+     * An HTML form to edit block settings
+     *
+     * @param Tree $tree
+     * @param int  $block_id
+     *
+     * @return string
+     */
+    public function editBlockConfiguration(Tree $tree, int $block_id): string
+    {
+
+        $info_style = $this->getBlockSetting($block_id, 'infoStyle', self::DEFAULT_STYLE);
+        $sort_style = $this->getBlockSetting($block_id, 'sortStyle', self::DEFAULT_SORT);
+
+        $info_styles = [
+            'list'  => I18N::translate('list'),
+            'table' => I18N::translate('table'),
+            'card' => I18N::translate('card'),
+            'capsule'=> I18N::translate('capsule'),
+            'navbar'=> I18N::translate('navbar'),
+        ];
+
+        $sort_styles = [
+            /* I18N: An option in a list-box */
+            'id_asc'  => I18N::translate('sort by Gedcom_ID, oldest first'),
+            /* I18N: An option in a list-box */
+            'id_desc' => I18N::translate('sort by Gedcom_ID, newest first'),
+        ];
+
+        return view('config', [
+            'info_style'  => $info_style,
+            'info_styles' => $info_styles,
+            'sort_style'  => $sort_style,
+            'sort_styles' => $sort_styles,
+        ]);
+    }
+
+
+
         public function customTranslations(string $language): array
     {
         //  
@@ -245,13 +319,14 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         // Note the special characters used in plural and context-sensitive translations.
         return [
-            'This website has %s trees' => 'Diese Website hat %s Stammbäume',
-            'There is one tree on this website'=>'Es gibt einen Baum auf dieser Website',
-            'Total number of households' => 'Gesamtzahl der Familien',
-            'Total number of Individuals' => 'Gesamtzahl der Personen',
-            'Total number of Events' => 'Gesamtzahl der Ereignisse',
-            'Total number of Surnames' => 'Gesamtzahl der Nachnamen',
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => 'Es gibt einen Baum auf dieser Website'. I18N::PLURAL .'Diese Website hat %d Stammbäume',
             'FamilyTree List' => 'Stammbaum-Liste',
+            'List of FamilyTree on Website' => 'Liste von FamilyTree auf der Website',
+            'navbar' => 'Navbar',
+            'card'=>'Karte',
+            'capsule'=>'Kapsel',
+            'sort by Gedcom_ID, oldest first'=>'Sortieren nach Gedcom-ID, älteste zuerst',
+            'sort by Gedcom_ID, newest first'=>'Sortieren nach Gedcom-ID, neueste zuerst',
         ];
     }
 
@@ -259,13 +334,16 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         // 
         return [
-            'This website has %s trees' => '本网站已收录%s个家谱',
-            'There is one tree on this website'=>'本网站收录了1个家谱',
-            'Total number of households' => '家庭总数',
-            'Total number of Individuals' => '家族成员总数',
-            'Total number of Events' => '事件总数',
-            'Total number of Surnames' => '姓氏总数',
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本网站已收录%d个家谱',
             'FamilyTree List' => '家谱列表',
+            'List of FamilyTree on Website' => '显示网站上的家谱列表',
+            'list'=>'列  表',
+            'table'=>'表  格',
+            'card'=>'卡  片',
+            'capsule'=>'胶  囊',
+            'navbar' => '导航栏',
+            'sort by Gedcom_ID, oldest first'=>'按Gedcom_ID排序，倒序',
+            'sort by Gedcom_ID, newest first'=>'按Gedcom_ID排序，正序',
         ];
     }
     
@@ -273,13 +351,16 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         
         return [
-            'This website has %s trees' => '本網站已收錄%s個家譜',
-            'There is one tree on this website'=>'本網站收錄了1個家譜',
-            'Total number of households' => '家庭總數',
-            'Total number of Individuals' => '家族成員總數',
-            'Total number of Events' => '事件總數',
-            'Total number of Surnames' => '姓氏總數',
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本網站已收錄%d個家譜',
             'FamilyTree List' => '家譜列表',
+            'List of FamilyTree on Website' => '顯示網站上的家譜列表',
+            'list'=>'列  表',
+            'table'=>'表  格',
+            'card'=>'卡  片',
+            'capsule'=>'膠  囊',
+            'navbar' => '导航栏',
+            'sort by Gedcom_ID, oldest first'=>'按Gedcom_ID排序，最老優先',
+            'sort by Gedcom_ID, newest first'=>'按Gedcom_ID排序，最新優先',
         ];
     }
 
