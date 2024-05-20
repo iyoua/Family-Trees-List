@@ -25,13 +25,13 @@ Under the guidance of Greg, the problem of routing family tree links has been re
 
 1.3.0 Version Update
 ---------------------
-Added block setting function,
-Three display styles have been added,
-Simplified prompt information and removed too many translation entries.
+1.Added block setting function,
+2.Three display styles have been added,
+3.Simplified prompt information and removed too many translation entries.
 
 
 1.3.2 Version Update
 ---------------------
-Fixed statistical errors in the number of events.
-Revised some translation entries.
-Added display style.
+1.Fixed statistical errors in the number of events.
+2.Revised some translation entries.
+3.Added display style.
