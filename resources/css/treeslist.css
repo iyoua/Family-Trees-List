@@ -20,8 +20,13 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
             transition: transform 0.3s ease; /* 添加过渡效果 */
             border-radius: 5px; /* 设置圆角 */
-        }
 
+        }
+        .number{
+                          display: flex;  
+  justify-content: space-between; /* 项目之间均匀分布，第一个在左边，最后一个在右边 */  
+  /* 或者使用 space-around，这样会在项目之间和两端都添加相等的空间 */
+        }
 
         /* 鼠标经过子容器时的样式 */
         .child:hover {
@@ -31,13 +36,19 @@
          hr.custom-height {
             height: 1px; /* 设置线条高度 */
             border: none; /* 移除默认边框 */
-            background-color: black; /* 设置线条颜色 */
+            border-top: 1px dashed #000; /* 虚线样式，颜色为黑色 */
             margin: 3px 0; /* 设置线条上下外边距 */
         }
 .zoom {
+        /* 使用filter: grayscale(100%)将图片转为灰色 */  
+    filter: grayscale(100%);  
+      
+    /* 可以添加一些过渡效果，使颜色变化更平滑 */  
+    transition: filter 0.3s ease-in-out; 
     transition: transform 0.3s; /* 设置过渡效果 */
 }
 
 .zoom:hover {
     transform: scale(1.2); /* 鼠标经过时放大1.2倍 */
+    filter: none; 
 }
