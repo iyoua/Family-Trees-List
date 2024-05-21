@@ -34,11 +34,11 @@ use Fisharebest\Webtrees\I18N;
        filter: none; 
 }
   .card1 {  
-    width: 160px; /* min-width: 300px;设置子容器的最小宽度 */
+    min-width: 160px; /* min-width: 300px;设置子容器的最小宽度 */
     border: 1px solid #ccc;  
     border-radius: 5px;  
-    margin-bottom: 10px;  
-                margin-bottom: 10px; /* 设置垂直外边距 */
+    margin-bottom: 5px;  
+                margin-bottom: 8px; /* 设置垂直外边距 */
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影效果 */
             transition: transform 0.3s ease; /* 添加过渡效果 */
     /*overflow: hidden;  */
@@ -63,31 +63,26 @@ use Fisharebest\Webtrees\I18N;
     
 
 </style>
-    <div class="container">
+  <div class="container">
         <?php foreach ($all_trees as $tree ) : ?>
-            <div class="card1" id="tcard<? echo $tree->name(); ?>">
-                <div class='card1-header' onclick="toggleCard(event, 'tcard<? echo $tree->name(); ?>')">
-                <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
+            <div class="card1 col-sm-4">
+                <div class='card-header'>
+                  <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
                     <img src="<? echo e($treeicon) ?>" class="zoom">
                     <b><? echo e($tree->title()) ?></b>
-                </a>
+                  </a>
                 </div>
-                <div class="card1-body">
-
+                <div class="card-body">
                       <?php echo I18N::translate("Families"); ?>:
                          <?= I18N::number(intval($families[$tree->id()])) ?><br>
-
                       <?php echo I18N::translate("Individuals"); ?>:
                         <?=  I18N::number(intval($individuals[$tree->id()])) ?><br>
-
                       <?php echo I18N::translate("Surnames"); ?>:
 				        <?=  I18N::number(intval($surnames[$tree->id()])) ?><br>
-
 				      <?php echo I18N::translate("Events"); ?>:
                         <?=  I18N::number(intval($events[$tree->id()])) ?>
                 </div>
             </div>
         <?php endforeach ?>
-        
-    </div>
-
+              
+</div>
