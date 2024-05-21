@@ -140,13 +140,13 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
      *
      * @return Collection<int,int>
      */
-    private function totalEvents(): array
-    {
-    return DB::table('dates')  
-        ->select('d_file', DB::raw('COUNT(*) as count'))  
-        ->whereNotIn('d_fact', ['HAED', 'CHAN']) // 排除HAED和CHAN  
-        ->groupBy('d_file')  
-        ->pluck('count', 'd_file') // 假设d_file就是gedcom_id  
+private function totalEvents(): array  
+{  
+    return DB::table('dates')    
+        ->select('d_file as gedcom_id', DB::raw('COUNT(*) as count'))  
+        ->whereNotIn('d_fact', ['HEAD', 'CHAN'])    
+        ->groupBy('d_file')    
+        ->pluck('count', 'gedcom_id') 
         ->all();  
 }
 
@@ -168,12 +168,11 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         $infoStyle = $this->getBlockSetting($block_id, 'infoStyle', self::DEFAULT_STYLE);
         $sortStyle = $this->getBlockSetting($block_id, 'sortStyle', self::DEFAULT_SORT);
-        $treesCollection = $this->tree_service->all(); // 假设返回的是一个Collection  
-        $sortStyle = 'id_desc';
+        $sortedTrees = $this->tree_service->all(); // 假设返回的是一个Collection  
         if ($sortStyle === 'id_desc') {  
-            $sortedTrees = $treesCollection->sortByDesc('tree_id')->all();  
-        } else {  
-           $sortedTrees = $treesCollection->sortBy('tree_id')->all();  
+            $sortedTrees = $sortedTrees->sortByDesc(function ($sortedTrees) {  
+            return $sortedTrees->id(); // 假设 $tree->id() 是获取 ID 的公共方法  
+            })->all();  
         } 
                 $content = view($infoStyle, [
                     'block_id' =>$block_id,
@@ -184,16 +183,15 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
                     'surnames'  => $this->totalSurnames(),
                     'treeicon' => $this->assetUrl('images/tree.png'),
                     'familyicon' => $this->assetUrl('images/families.png'),
-			    	'individualicon' => $this->assetUrl('images/person2.png'),
-			    	'eventicon' => $this->assetUrl('images/event.png'),
-			    	'surnameicon' => $this->assetUrl('images/sur.png'),
-			    	'context' => $context,
+		    'individualicon' => $this->assetUrl('images/person2.png'),
+		    'eventicon' => $this->assetUrl('images/event.png'),
+		    'surnameicon' => $this->assetUrl('images/sur.png'),
+		    'context' => $context,
                 ]);
 
         if ($context !== self::CONTEXT_EMBED) {
             $totaltrees=$this->tree_service->all()->count();
-
-			$title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
+       	    $title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
             return view('modules/block-template', [
                 'block'      => Str::kebab($this->name()),
                 'id'         => $block_id,
@@ -235,7 +233,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     
     public function customModuleVersion(): string
     {
-        return '1.3.2';
+        return '1.3.3';
     }
 
 
@@ -327,6 +325,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
             'capsule'=>'Kapsel',
             'sort by Gedcom_ID, oldest first'=>'Sortieren nach Gedcom-ID, älteste zuerst',
             'sort by Gedcom_ID, newest first'=>'Sortieren nach Gedcom-ID, neueste zuerst',
+            '*Click on the header to sort the values.'=>'*Klicken Sie auf die Kopfzeile, um die Werte zu sortieren.',
         ];
     }
 
@@ -334,7 +333,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         // 
         return [
-            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本网站已收录%d个家谱',
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本网站已收录%d部家谱',
             'FamilyTree List' => '家谱列表',
             'List of FamilyTree on Website' => '显示网站上的家谱列表',
             'list'=>'列  表',
@@ -342,8 +341,9 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
             'card'=>'卡  片',
             'capsule'=>'胶  囊',
             'navbar' => '导航栏',
-            'sort by Gedcom_ID, oldest first'=>'按Gedcom_ID排序，倒序',
-            'sort by Gedcom_ID, newest first'=>'按Gedcom_ID排序，正序',
+            'sort by Gedcom_ID, oldest first'=>'按Gedcom_ID排序，正序',
+            'sort by Gedcom_ID, newest first'=>'按Gedcom_ID排序，倒序',
+            '*Click on the header to sort the values.'=>'*点击表头可对数值进行排序。',
         ];
     }
     
@@ -351,7 +351,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         
         return [
-            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本網站已收錄%d個家譜',
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => '本網站已收錄%d部家譜',
             'FamilyTree List' => '家譜列表',
             'List of FamilyTree on Website' => '顯示網站上的家譜列表',
             'list'=>'列  表',
@@ -361,6 +361,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
             'navbar' => '导航栏',
             'sort by Gedcom_ID, oldest first'=>'按Gedcom_ID排序，最老優先',
             'sort by Gedcom_ID, newest first'=>'按Gedcom_ID排序，最新優先',
+            '*Click on the header to sort the values.'=>'*點擊表頭可對數值進行排序。',
         ];
     }
 
