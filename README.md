@@ -22,7 +22,7 @@ After downloading and decompressing, simply upload it to the modules_v4 folder o
 
 Version update
 ---------------
-Under the guidance of Greg, the problem of routing family tree links has been resolved. We would like to express our gratitude!
+With the help of GREG and HERMANN, the modules have become increasingly mature, and I would like to express my gratitude to them.
 
 ### 1.2.1 Version Upgrade
 
