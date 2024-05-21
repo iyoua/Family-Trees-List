@@ -2,8 +2,8 @@ Family-Trees-List module for WebTrees
 =====================================
 *Family-tree-list* is a module for displaying multiple genealogical lists in webtrees.
 
-The module effect is as follows:
--------------------------------
+### The module effect:
+
 ![capsule](https://github.com/iyoua/Family-Trees-List/assets/102014216/8fce766b-5641-4c15-95b2-6f0ba1f9d937)
 ![cards](https://github.com/iyoua/Family-Trees-List/assets/102014216/ff239166-3b00-47f6-b609-8242953b7b98)
 ![list](https://github.com/iyoua/Family-Trees-List/assets/102014216/4c94f5cd-2499-43e9-bcf7-4986d9a691b3)
@@ -24,22 +24,28 @@ Version update
 ---------------
 Under the guidance of Greg, the problem of routing family tree links has been resolved. We would like to express our gratitude!
 
-1.2.1 Version Upgrade
----------------------
+### 1.2.1 Version Upgrade
+
 1. Added statistics on the total number of genealogies;
 2. Revised the list layout to accommodate longer family tree names;
 3. Modified the settings of user page blocks.
 
 
-1.3.0 Version Update
----------------------
+### 1.3.0 Version Update
+
 1. Added block setting function;
 2. Three display styles have been added;
 3. Simplified prompt information and removed too many translation entries.
 
 
-1.3.2 Version Update
----------------------
+### 1.3.2 Version Update
+
 1. Fixed statistical errors in the number of events.
 2. Revised some translation entries.
 3. Added display style.
+
+
+### 1.3.3 Version Update
+
+1. Fixed several errors
+2. Added sorting of family tree data
