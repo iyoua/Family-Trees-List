@@ -2,6 +2,14 @@ Family-Trees-List module for WebTrees
 =====================================
 *Family-tree-list* is a module for displaying multiple genealogical lists in webtrees.
 
+The module effect is as follows:
+-------------------------------
+![capsule](https://github.com/iyoua/Family-Trees-List/assets/102014216/8fce766b-5641-4c15-95b2-6f0ba1f9d937)
+![cards](https://github.com/iyoua/Family-Trees-List/assets/102014216/ff239166-3b00-47f6-b609-8242953b7b98)
+![list](https://github.com/iyoua/Family-Trees-List/assets/102014216/4c94f5cd-2499-43e9-bcf7-4986d9a691b3)
+![navbar](https://github.com/iyoua/Family-Trees-List/assets/102014216/898d7eec-e9e4-410d-8d33-406227eed23d)
+![table](https://github.com/iyoua/Family-Trees-List/assets/102014216/666f99c7-7851-4500-8539-94772042e8ac)
+
 In the section of the website homepage, display a list of genealogies on the website, including statistical data for each genealogy, such as 
 1. total number of families,
 2. total number of individuals,
