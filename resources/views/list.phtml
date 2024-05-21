@@ -13,17 +13,21 @@ use Fisharebest\Webtrees\I18N;
                 <a href="<? echo e(route(TreePage::class,['tree'=>$tree->name()])); ?>">
                     <b><?= e($tree->title()) ?></b></a>
                 <hr  class="custom-height">
+                <div class="number">
+                <div>
                 <img src="<?=e($familyicon)?>" title="<?php echo I18N::translate("Families"); ?>" class="zoom">
-                    <?= I18N::number(intval($families[$tree->id()])) ?>，
+                    <?= I18N::number(intval($families[$tree->id()])) ?></div>
+                    <div>
                 <img src="<?=e($individualicon)?>" title="<?php echo I18N::translate("Individuals"); ?>" class="zoom">
-                    <?=  I18N::number(intval($individuals[$tree->id()])) ?>，
-                
+                    <?=  I18N::number(intval($individuals[$tree->id()])) ?></div>
+                <div>
 				<img src="<?=e($eventicon)?>" title="<?php echo I18N::translate("Events"); ?>" class="zoom">
-                    <?=  I18N::number(intval($events[$tree->id()])) ?>，
+                    <?=  I18N::number(intval($events[$tree->id()])) ?></div>
+                    <div>
                 <img src="<?=e($surnameicon)?>" title="<?php echo I18N::translate("Surnames"); ?>" class="zoom">
-				    <?=  I18N::number(intval($surnames[$tree->id()])) ?>
+				    <?=  I18N::number(intval($surnames[$tree->id()])) ?></div>
                 
-				
+				</div>
             </div>
         <?php endforeach ?>
 
