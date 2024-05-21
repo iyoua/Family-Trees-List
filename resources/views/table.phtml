@@ -13,24 +13,24 @@ use Fisharebest\Webtrees\I18N;
   }  
 </style> 
 
-<table class="table table-sm">
+<table id="myTable" class="table table-sm table-striped">
 
     <thead>
         <tr>
-            <th style="text-align: center;" width="40%"  >
+            <th style="text-align: center;" width="40%" onclick="sortTable(0)"  >
                 <img src="<? echo e($treeicon) ?>">&nbsp;&nbsp;<?= I18N::translate('Family tree') ?>
             </th>
-            <th style="text-align: center;" width="15%" >
-				<img src="<?=e($familyicon)?>"><?= I18N::translate('Families') ?>
+            <th style="text-align: center;" width="15%"  onclick="sortTable(1)">
+				<img src="<?=e($familyicon)?>"><?= I18N::translate('Families') ?>*
             </th>
-			<th style="text-align: center;" width="15%" >
-				<img src="<?=e($individualicon)?>"><?= I18N::translate('Individuals') ?>
+			<th style="text-align: center;" width="15%"  onclick="sortTable(2)">
+				<img src="<?=e($individualicon)?>"><?= I18N::translate('Individuals') ?>*
             </th>
-			<th style="text-align: center;" width="15%" >
-				<img src="<?=e($surnameicon)?>"><?= I18N::translate('Surnames') ?>
+			<th style="text-align: center;" width="15%"  onclick="sortTable(3)">
+				<img src="<?=e($surnameicon)?>"><?= I18N::translate('Surnames') ?>*
             </th>
-			<th style="text-align: center;" width="15%" >
-				<img src="<?=e($eventicon)?>"><?= I18N::translate('Events') ?>
+			<th style="text-align: center;" width="15%"  onclick="sortTable(4)">
+				<img src="<?=e($eventicon)?>"><?= I18N::translate('Events') ?>*
             </th>
         </tr>
     </thead>
@@ -59,3 +59,63 @@ use Fisharebest\Webtrees\I18N;
         <?php endforeach ?>
     </tbody>
 </table>
+<?= I18N::translate('*Click on the header to sort the values.') ?>
+<script>
+function sortTable(n) {  
+  var table, rows, switching, i, x, y, shouldSwitch, dir, switchcount = 0;  
+  table = document.getElementById("myTable");  
+  switching = true;  
+  dir = "asc"; // Set the sorting direction to ascending  
+  
+  // Helper function to remove thousands separators and convert to integer  
+  function parseIntegerString(str) {  
+    // Remove commas and dots as thousands separators  
+    var noSeparators = str.replace(/[,.]/g, '');  
+    var number = parseInt(noSeparators, 10); // Convert to integer  
+    return isNaN(number) ? null : number;  
+  }  
+  
+  while (switching) {  
+    switching = false;  
+    rows = table.rows;  
+  
+    // Skip the first row (header)  
+    for (i = 1; i < (rows.length - 1); i++) {  
+      shouldSwitch = false;  
+  
+      // Get the two elements you want to compare, converting to integer for sorting  
+      x = parseIntegerString(rows[i].getElementsByTagName("TD")[n].textContent || rows[i].getElementsByTagName("TD")[n].innerText);  
+      y = parseIntegerString(rows[i + 1].getElementsByTagName("TD")[n].textContent || rows[i + 1].getElementsByTagName("TD")[n].innerText);  
+  
+      // Check if the two rows should switch place  
+      if (x !== null && y !== null) {  
+        // Both values are numbers, compare as numbers  
+        if (dir == "asc") {  
+          if (x > y) {  
+            shouldSwitch = true;  
+            break;  
+          }  
+        } else if (dir == "desc") {  
+          if (x < y) {  
+            shouldSwitch = true;  
+            break;  
+          }  
+        }  
+      }  
+    }  
+  
+    if (shouldSwitch) {  
+      rows[i].parentNode.insertBefore(rows[i + 1], rows[i]);  
+      switching = true;  
+      switchcount++;  
+    } else {  
+      // If no switching has been done and the direction is "asc",  
+      // set the direction to "desc" and run the while loop again.  
+      if (switchcount == 0 && dir == "asc") {  
+        dir = "desc";  
+        switching = true;  
+      }  
+    }  
+  }  
+}
+</script>
