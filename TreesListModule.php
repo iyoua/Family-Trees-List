@@ -140,15 +140,21 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
      *
      * @return Collection<int,int>
      */
-private function totalEvents(): array  
-{  
-    return DB::table('dates')    
+    private function totalEvents(): array  
+        {  
+        $allFiles = DB::table('gedcom')->select('gedcom_id')->distinct()->pluck('gedcom_id')->all();  
+        $eventCounts = DB::table('dates')  
         ->select('d_file as gedcom_id', DB::raw('COUNT(*) as count'))  
-        ->whereNotIn('d_fact', ['HEAD', 'CHAN'])    
-        ->groupBy('d_file')    
-        ->pluck('count', 'gedcom_id') 
+        ->whereNotIn('d_fact', ['HEAD', 'CHAN'])  
+        ->groupBy('d_file')  
+        ->pluck('count', 'gedcom_id')  
         ->all();  
-}
+         $result = [];  
+        foreach ($allFiles as $gedcomId) {  
+           $result[$gedcomId] = $eventCounts[$gedcomId] ?? 0;
+         }  
+        return $result;  
+        }
 
     /**
      * Count the number of suenames in each tree.
@@ -183,15 +189,16 @@ private function totalEvents(): array
                     'surnames'  => $this->totalSurnames(),
                     'treeicon' => $this->assetUrl('images/tree.png'),
                     'familyicon' => $this->assetUrl('images/families.png'),
-		    'individualicon' => $this->assetUrl('images/person2.png'),
-		    'eventicon' => $this->assetUrl('images/event.png'),
-		    'surnameicon' => $this->assetUrl('images/sur.png'),
-		    'context' => $context,
+			    	'individualicon' => $this->assetUrl('images/person2.png'),
+			    	'eventicon' => $this->assetUrl('images/event.png'),
+			    	'surnameicon' => $this->assetUrl('images/sur.png'),
+			    	'context' => $context,
                 ]);
 
         if ($context !== self::CONTEXT_EMBED) {
             $totaltrees=$this->tree_service->all()->count();
-       	    $title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
+
+			$title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
             return view('modules/block-template', [
                 'block'      => Str::kebab($this->name()),
                 'id'         => $block_id,
