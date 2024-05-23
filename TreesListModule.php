@@ -1,7 +1,5 @@
 <?php
 
-
-
 declare(strict_types=1);
 
 namespace TreesListModule;
@@ -28,13 +26,11 @@ use Fisharebest\Webtrees\Services\TreeService;
 use Fisharebest\Webtrees\Http\RequestHandlers\TreePage;
 use Illuminate\Support\Collection;
 
-
 use function in_array;
 use function time;
 
 class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,ModuleBlockInterface, ModuleGlobalInterface
 {
-   
     use ModuleCustomTrait;
     use ModuleGlobalTrait;
     use ModuleBlockTrait;
@@ -46,20 +42,17 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         // Default values for new blocks.
     private const DEFAULT_SORT = 'id_desc'; //默认排序方式：id
     private const DEFAULT_STYLE = 'list';   //默认布局：列表
-       
 
     private TreeService $tree_service;
     public function __construct(TreeService $tree_service)
     {
         $this->tree_service = $tree_service;
     }
-    
+
     public function resourcesFolder(): string
     {
         return __DIR__ .  DIRECTORY_SEPARATOR .  'resources' .  DIRECTORY_SEPARATOR;
-        
     }
-    
 
     public function boot(): void
     {
@@ -71,15 +64,12 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         View::registerCustomView('::capsule', $this->name() . '::capsule');
         View::registerCustomView('::navbar', $this->name() . '::navbar');
     }
-        
-    
 
     public function headContent(): string
     {
         return '<link rel="stylesheet" href="' . e($this->assetUrl('css/treeslist.css')) . '">';
-        
     }
-    
+
 
     public function title(): string
     {
@@ -94,7 +84,6 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         
     }
 
-
     public function customModuleAuthorName(): string
     {
         return 'iyoua';
@@ -105,7 +94,6 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     {
         return self::CUSTOM_WEBSITE;
     }
-
 
     /**
      * Count the number of individuals in each tree.
@@ -140,20 +128,20 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
      *
      * @return Collection<int,int>
      */
-    private function totalEvents(): array  
-        {  
-        $allFiles = DB::table('gedcom')->select('gedcom_id')->distinct()->pluck('gedcom_id')->all();  
-        $eventCounts = DB::table('dates')  
-        ->select('d_file as gedcom_id', DB::raw('COUNT(*) as count'))  
-        ->whereNotIn('d_fact', ['HEAD', 'CHAN'])  
-        ->groupBy('d_file')  
-        ->pluck('count', 'gedcom_id')  
-        ->all();  
-         $result = [];  
-        foreach ($allFiles as $gedcomId) {  
+    private function totalEvents(): array
+        {
+        $allFiles = DB::table('gedcom')->select('gedcom_id')->distinct()->pluck('gedcom_id')->all();
+        $eventCounts = DB::table('dates')
+        ->select('d_file as gedcom_id', DB::raw('COUNT(*) as count'))
+        ->whereNotIn('d_fact', ['HEAD', 'CHAN'])
+        ->groupBy('d_file')
+        ->pluck('count', 'gedcom_id')
+        ->all();
+         $result = [];
+        foreach ($allFiles as $gedcomId) {
            $result[$gedcomId] = $eventCounts[$gedcomId] ?? 0;
-         }  
-        return $result;  
+         }
+        return $result;
         }
 
     /**
@@ -175,11 +163,11 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         $infoStyle = $this->getBlockSetting($block_id, 'infoStyle', self::DEFAULT_STYLE);
         $sortStyle = $this->getBlockSetting($block_id, 'sortStyle', self::DEFAULT_SORT);
         $sortedTrees = $this->tree_service->all(); // 假设返回的是一个Collection  
-        if ($sortStyle === 'id_desc') {  
-            $sortedTrees = $sortedTrees->sortByDesc(function ($sortedTrees) {  
-            return $sortedTrees->id(); // 假设 $tree->id() 是获取 ID 的公共方法  
-            })->all();  
-        } 
+        if ($sortStyle === 'id_desc') {
+            $sortedTrees = $sortedTrees->sortByDesc(function ($sortedTrees) {
+            return $sortedTrees->id(); // 假设 $tree->id() 是获取 ID 的公共方法
+            })->all();
+        }
                 $content = view($infoStyle, [
                     'block_id' =>$block_id,
                     'all_trees'  => $sortedTrees,
@@ -189,20 +177,20 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
                     'surnames'  => $this->totalSurnames(),
                     'treeicon' => $this->assetUrl('images/tree.png'),
                     'familyicon' => $this->assetUrl('images/families.png'),
-			    	'individualicon' => $this->assetUrl('images/person2.png'),
-			    	'eventicon' => $this->assetUrl('images/event.png'),
-			    	'surnameicon' => $this->assetUrl('images/sur.png'),
-			    	'context' => $context,
+                    'individualicon' => $this->assetUrl('images/person2.png'),
+                    'eventicon' => $this->assetUrl('images/event.png'),
+                    'surnameicon' => $this->assetUrl('images/sur.png'),
+                    'context' => $context,
                 ]);
 
         if ($context !== self::CONTEXT_EMBED) {
             $totaltrees=$this->tree_service->all()->count();
 
-			$title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
+            $title=I18N::plural('There is one tree on this website',  'This website has %d trees',$totaltrees, $totaltrees);
             return view('modules/block-template', [
                 'block'      => Str::kebab($this->name()),
                 'id'         => $block_id,
-				'config_url' => $this->configUrl($tree, $context, $block_id),
+                'config_url' => $this->configUrl($tree, $context, $block_id),
                 'title'      => $title,
                 'content'    => $content,
             ]);
@@ -240,7 +228,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
     
     public function customModuleVersion(): string
     {
-        return '1.3.3';
+        return '1.3.5';
     }
 
 
@@ -299,40 +287,53 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
         ]);
     }
 
-
-
         public function customTranslations(string $language): array
     {
         //  
         switch ($language) {
             case 'de':
                 return $this->germanTranslations();
-            
+            case 'nl':
+                return $this->dutchTranslations();
             case 'zh-Hans':
                 return $this->hansTranslations();
-                
             case 'zh-Hant':
-                return $this->hantTranslations();    
-                
+                return $this->hantTranslations();
             default:
                 return [];
         }
     }
-    
-    
+
     protected function germanTranslations(): array
     {
         // Note the special characters used in plural and context-sensitive translations.
         return [
             'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => 'Es gibt einen Baum auf dieser Website'. I18N::PLURAL .'Diese Website hat %d Stammbäume',
             'FamilyTree List' => 'Stammbaum-Liste',
-            'List of FamilyTree on Website' => 'Liste von FamilyTree auf der Website',
-            'navbar' => 'Navbar',
-            'card'=>'Karte',
-            'capsule'=>'Kapsel',
+            'List of FamilyTree on Website' => 'Stammbaumliste der Website',
+            'navbar' => 'Navigationsleiste',
+            'card'=>'Karten',
+            'capsule'=>'Plaketten',
             'sort by Gedcom_ID, oldest first'=>'Sortieren nach Gedcom-ID, älteste zuerst',
             'sort by Gedcom_ID, newest first'=>'Sortieren nach Gedcom-ID, neueste zuerst',
             '*Click on the header to sort the values.'=>'*Klicken Sie auf die Kopfzeile, um die Werte zu sortieren.',
+        ];
+    }
+
+    protected function dutchTranslations(): array
+    {
+        // Note the special characters used in plural and context-sensitive translations.
+        return [
+            'There is one tree on this website'. I18N::PLURAL .'This website has %d trees' => 'Deze website heeft één stamboom'. I18N::PLURAL .'Deze website heeft %d stambomen',
+            'FamilyTree List' => 'Stamboomlijst',
+            'List of FamilyTree on Website' => 'Lijst van stambomen op website',
+            'table'=>'tabel',
+            'card'=>'kaarten',
+            'capsule'=>'labels',
+            'navbar' => 'navigatiebalk',
+            'sort by Gedcom_ID, oldest first'=>'sorteren op Gedcom_ID, oudste eerst',
+            'sort by Gedcom_ID, newest first'=>'sorteren op Gedcom_ID, nieuwste eerst',
+            '*Click on the header to sort the values.'=>'*Klik op de koptekst om de waarden te sorteren',
         ];
     }
 
@@ -353,7 +354,7 @@ class TreesListModule extends HtmlBlockModule implements ModuleCustomInterface,M
             '*Click on the header to sort the values.'=>'*点击表头可对数值进行排序。',
         ];
     }
-    
+
     protected function hantTranslations() : array
     {
         
