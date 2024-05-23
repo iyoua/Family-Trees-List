@@ -54,3 +54,10 @@ With the help of GREG and HERMANN, the modules have become increasingly mature, 
 ### 1.3.4 Version Update
 
 1. Fixed the issue of array index errors after the statistical result was 0
+
+
+### 1.3.5 Version Update
+
+1. Updated German translation
+2. Fixed the issue of automatic activation of the soft keyboard caused by CSS
+3. Corrected some non-standard grammar
